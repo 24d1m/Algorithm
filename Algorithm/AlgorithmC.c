@@ -21,7 +21,7 @@ int main() {
 	time_t startTime, endTime;
 	unsigned int input;
 
-	printf("testtest");
+	printf("testoftest");
 
 	//입력값 랜덤 & 중복
 	for (i = 0; i < SIZE; i++) {
