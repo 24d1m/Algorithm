@@ -5,7 +5,7 @@
 #include <string.h>
 #include <time.h>
 
-#define SIZE 50000
+#define SIZE 30000
 #define MaxValue 100000
 
 
@@ -14,6 +14,8 @@ void sortSelection(int arr[]);
 void sortInsert(int arr[]);
 void sortMerge(int arr[], int idxStart, int idxEnd);
 void sortMergeSub(int arr[], int idxStart, int idxMid, int idxEnd);
+void sortQuick(int arr[], int idxStart, int idxEnd);
+int sortQuickSub(int arr[], int idxStart, int idxEnd);
 
 int main() {
 	int arr[SIZE] = { 0 };
@@ -70,6 +72,19 @@ int main() {
 	//printArray(arr);
 	startTime = clock();
 	sortMerge(arr, 0, SIZE - 1);
+	endTime = clock();
+	executeTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
+	//printf("After: ");
+	//printArray(arr);
+	printf("Execute time: %f\n", executeTime);
+
+	//퀵 어려움,,
+	memcpy(arr, arrTmp, (sizeof(int) * SIZE));
+	printf("\n\n$$$ Quick  $$$\n");
+	//printf("Before: ");
+	//printArray(arr);
+	startTime = clock();
+	sortQuick(arr, 0, SIZE);
 	endTime = clock();
 	executeTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
 	//printf("After: ");
@@ -154,4 +169,58 @@ void sortMergeSub(int arr[], int idxStart, int idxMid, int idxEnd) {
 
 	memcpy(arr+idxStart, tmp, sizeof(int) * (idxEnd - idxStart + 1));
 	free(tmp);
+}
+void sortQuick(int arr[], int idxStart, int idxEnd) {
+	int idxPivot; //기준값 위치
+	
+	//재배치 또는 분할
+		//기준 원소 선정
+		//기준 원소보다 작은 값은 기준 원소 왼쪽으로, 큰 값은 오른쪽으로
+	idxPivot = sortQuickSub(arr, idxStart, idxEnd);
+	
+	//기준 원소보다 작은 값들의 그룹을 정렬
+	if (idxStart < idxPivot - 1) {
+		sortQuick(arr, idxStart, idxPivot - 1);
+	}
+	//기준 원소보다 큰 값들의 그룹을 정렬
+	if (idxStart > idxPivot + 1) {
+		sortQuick(arr, idxPivot + 1, idxEnd);
+	}
+}
+int sortQuickSub(int arr[], int idxStart, int idxEnd) {
+	//교재의 j의 해당하는 함수, 기준값보다 큰 값들의 그룹의 첫번째 위치, 교재의 i에 해당하는 변수, ,
+	int i, idxLargeGroup, tmp, pivotValue;
+	
+	pivotValue = arr[idxEnd];
+	idxLargeGroup = idxStart;
+
+	for (i = idxStart; i < idxEnd; i++) {
+		if (arr[i] > pivotValue) { //i번째 값이 기준값보다 작다면 할 작업이 없음
+			//i번째 값과 idxLargeGroup의 값을 교환, i번째 값을 기준 값보다 작은 그룹에 포함
+			tmp = arr[i];
+			arr[i] = arr[idxLargeGroup];
+			arr[idxLargeGroup] = tmp;
+			//idxLargeGroup을 1 증가
+			idxLargeGroup++;
+		}
+	}
+	//기준 값과 큰 그룹의 첫 번째 위치(idxLargeGroup)와 교환
+	tmp = arr[idxEnd];
+	arr[idxEnd] = arr[idxLargeGroup];
+	arr[idxLargeGroup] = tmp;
+
+	//기준 값 위치를 리턴
+	return idxLargeGroup;
+}
+void sortHeap() {
+
+}
+void makeHeap(int arr[]) {
+	int i;
+	//마지막 단말노드의 부모노드 인덱스
+	i = ;
+
+	for (; i >= 0; i--) {
+		adjustHeap(arr, i);
+	}
 }
