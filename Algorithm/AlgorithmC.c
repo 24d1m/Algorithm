@@ -216,11 +216,30 @@ void sortHeap() {
 
 }
 void makeHeap(int arr[]) {
-	int i;
-	//마지막 단말노드의 부모노드 인덱스
-	i = ;
+	//힙을 0부터 시작하는 배열로 표현할 때
+	//왼쪽 자식의 인덱스 번호는 2 * N + 1
+	//오른쪽 자신의 인덱스 번호는 2 * N + 2
+	// 부모의 인덱스 (N - 1) / 2
 
+	//마지막 단말노드의 부모노드(자식을 가지고 있는 가장 큰 인덱스를 가지는 노드)의 인덱스
+	int i = ((SIZE - 1) - 1) / 2;
+
+	//자식을 가지고 있는 마지막 노드부터 노트노드까지 수선
 	for (; i >= 0; i--) {
-		adjustHeap(arr, i);
+		adjustHeap(arr, i, (SIZE - 1));
 	}
+}
+void adjustHead(int arr[], int idxNow, int idxEnd) {
+	int idxChildLeft , idxChildRight, tmp;
+
+	//자식의 인덱스를 구하는 수식
+	idxChildLeft = 2 * idxNow + 1;
+	idxChildRight = idxChildLeft + 1;
+
+	//왼쪽 자식만 있다면
+
+	//왼쪽, 오른쪽 자식이 있다면
+
+	//idxNow의 값과 자식들의 값을 비교해 자식값이 더 크다면 교환(최대힙 기준)
+
 }
