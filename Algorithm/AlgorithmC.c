@@ -5,9 +5,8 @@
 #include <string.h>
 #include <time.h>
 
-#define SIZE 30000
-#define MaxValue 100000
-
+#define SIZE 30
+#define MaxValue 1000
 
 void printArray(int arr[]);
 void sortSelection(int arr[]);
@@ -16,11 +15,15 @@ void sortMerge(int arr[], int idxStart, int idxEnd);
 void sortMergeSub(int arr[], int idxStart, int idxMid, int idxEnd);
 void sortQuick(int arr[], int idxStart, int idxEnd);
 int sortQuickSub(int arr[], int idxStart, int idxEnd);
+void sortHeap(int arr[]);
+void makeHeap(int arr[]);
+void adjustHeap(int arr[], int idxNow, int idxEnd);
+void sortCounting(int arr[], int arrMax);
 
 int main() {
 	int arr[SIZE] = { 0 };
 	int arrTmp[SIZE] = { 0 };
-	int i, j;
+	int i, j, arrMax = -1;
 	float executeTime;
 	time_t startTime, endTime;
 	unsigned int input;
@@ -34,6 +37,12 @@ int main() {
 				i--;
 				break;
 			}
+		}
+	}
+	//원본 배열 값 중에 가장 큰 값
+	for (i = 0; i < SIZE; i++) {
+		if(arrMax < arr[i]) {
+			arrMax = arr[i];
 		}
 	}
 
@@ -85,6 +94,32 @@ int main() {
 	//printArray(arr);
 	startTime = clock();
 	sortQuick(arr, 0, SIZE);
+	endTime = clock();
+	executeTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
+	//printf("After: ");
+	//printArray(arr);
+	printf("Execute time: %f\n", executeTime);
+
+	//힙
+	memcpy(arr, arrTmp, (sizeof(int) * SIZE));
+	printf("\n\n$$$ Heap  $$$\n");
+	//printf("Before: ");
+	//printArray(arr);
+	startTime = clock();
+	sortHeap(arr);
+	endTime = clock();
+	executeTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
+	//printf("After: ");
+	//printArray(arr);
+	printf("Execute time: %f\n", executeTime);
+
+	//계수
+	memcpy(arr, arrTmp, (sizeof(int) * SIZE));
+	printf("\n\n$$$ Counting $$$\n");
+	//printf("Before: ");
+	//printArray(arr);
+	startTime = clock();
+	sortCounting(arr, arrMax);
 	endTime = clock();
 	executeTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
 	//printf("After: ");
@@ -212,8 +247,20 @@ int sortQuickSub(int arr[], int idxStart, int idxEnd) {
 	//기준 값 위치를 리턴
 	return idxLargeGroup;
 }
-void sortHeap() {
+void sortHeap(int arr[]) {
+	int i, tmp;
+	makeHeap(arr);
 
+	//가장 위에 있는(루트) 노드의 값은 가장 큰값
+	for (i = SIZE - 1; i > 0; i--) {
+		//마지막 원소{arr[i]와 루트 노드(arr[0])와 교환
+		tmp = arr[i];
+		arr[i] = arr[0];
+		arr[0] = tmp;
+
+		//마지막 원소를 제외하고 루트 노드를 기준으로 수선
+		adjustHeap(arr, 0, (i - 1));
+	}
 }
 void makeHeap(int arr[]) {
 	//힙을 0부터 시작하는 배열로 표현할 때
@@ -229,17 +276,54 @@ void makeHeap(int arr[]) {
 		adjustHeap(arr, i, (SIZE - 1));
 	}
 }
-void adjustHead(int arr[], int idxNow, int idxEnd) {
-	int idxChildLeft , idxChildRight, tmp;
+void adjustHeap(int arr[], int idxNow, int idxEnd) {
+	int idxChildLeft, idxChildRight, idxLarge = -1, tmp;  //idxLarge를 초기화 하는 경우를 대비하기 위해
 
 	//자식의 인덱스를 구하는 수식
 	idxChildLeft = 2 * idxNow + 1;
 	idxChildRight = idxChildLeft + 1;
 
-	//왼쪽 자식만 있다면
+	//왼쪽 자식만 존재한다면
 
-	//왼쪽, 오른쪽 자식이 있다면
-
+	//왼쪽, 오른쪽 자식이 존재한다면
+	if (idxChildRight <= idxEnd) {
+		if (arr[idxChildLeft] > arr[idxChildRight]) {
+			idxLarge = idxChildLeft;
+		}
+		else {
+			idxLarge = idxChildRight;
+		}
+	}
+	else if (idxChildLeft <= idxEnd) {
+		idxLarge = idxChildLeft;
+	}
 	//idxNow의 값과 자식들의 값을 비교해 자식값이 더 크다면 교환(최대힙 기준)
+	if (idxLarge > 0) {
+		//자식이 더 크다면 교환
+		if (arr[idxNow] < arr[idxLarge]) {
+			tmp = arr[idxNow];
+			arr[idxNow] = arr[idxLarge];
+			arr[idxLarge] = tmp;
 
+			//자식 노드를 기준으로 수선
+			adjustHeap(arr, idxLarge, idxEnd);
+		}
+	}
+}
+void sortCounting(int arr[], int arrMax) {
+	int i;
+	int* count;
+
+	count = malloc(sizeof(int) * (arrMax + 1));
+	memset(count, 0, sizeof(int) * (arrMax + 1));  //카운트변수의 모든 값을 0으로 초기화
+
+	for (i = 0; i < SIZE; i++) {
+		count[arr[i]] = 1;  //원본 배열에 존재하는 값의 인덱스만 1로 설정
+		//count[arr[i]]++;	//원본 배열에 중복까지 체크
+	}
+	for (i = 0; i < arrMax; i++) {
+		if (count[i] == 1) {
+			printf("%d ", i);
+		}
+	}
 }
