@@ -6,19 +6,21 @@
 #include <string.h>
 #include <time.h>
 
-#define SIZE 30
+#define SIZE 10
 #define MaxValue 1000
 
 int compare(const void* arg1, const void* arg2);
 int searchBinary(int arr[], int key);
+void printArray(int arr[]);
 
 int main() {
 	//key = 탐색하고자 하는 데이터, idxKey = 탐색 값의 위치
-	int arr[SIZE] = {}, key, idxKey;
+	int arr[SIZE] = { 45, 766, 12, 4, 541, 13, 77, 654, 888, 11 };
+	int key = 77, idxKey;
 
 	//정렬
 	qsort(arr, SIZE, sizeof(int), compare);
-
+	printArray(arr);
 
 	idxKey = searchBinary(arr, key);  //이진탐색
 	if (idxKey >= 0) {
@@ -41,8 +43,8 @@ int compare(const void* arg1, const void* arg2) {
 }
 
 int searchBinary(int arr[], int key) {
-	//idxKey = 키의 인덱스, idxKey = 탐색 실패를 대비하기 위한 초기값
-	int idxStart = 0, idxMid, idxEnd = SIZE - 1, idxKey = -1;
+	int idxStart = 0, idxMid, idxEnd = SIZE - 1;
+	int idxKey = -1;  //idxKey = 키의 인덱스, idxKey = 탐색 실패를 대비하기 위한 초기값
 
 	while (idxStart <= idxEnd) {
 		//가운데 위치를 구함
@@ -61,4 +63,13 @@ int searchBinary(int arr[], int key) {
 		}
 	}
 	return idxKey;
+}
+
+void printArray(int arr[]) {
+	int i = 0;
+
+	for (i = 0; i < SIZE; i++) {
+		printf("%d  ", arr[i]);
+	}
+	printf("\n");
 }

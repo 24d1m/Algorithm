@@ -21,12 +21,12 @@ void adjustHeap(int arr[], int idxNow, int idxEnd);
 void sortCounting(int arr[], int arrMax);
 
 int main() {
-	int arr[SIZE] = { 0 };
-	int arrTmp[SIZE] = { 0 };
-	int i, j, arrMax = -1;
+	int arr[SIZE] = { 0 }, arrTmp[SIZE] = { 0 };
+	int arrMax = -1;
+	int i, j;
+	unsigned int input;
 	float executeTime;
 	time_t startTime, endTime;
-	unsigned int input;
 
 	//입력값 랜덤 & 중복
 	for (i = 0; i < SIZE; i++) {
@@ -131,13 +131,15 @@ int main() {
 
 void printArray(int arr[]) {
 	int i = 0;
+
 	for (i = 0; i < SIZE; i++) {
 		printf("%d  ", arr[i]);
 	}
 	printf("\n");
 }
 void sortSelection(int arr[]) {
-	int i, j, idxMin, tmp;
+	int i, j;
+	int idxMin, tmp;
 
 	for (i = 0; i < SIZE - 1; i++) {  // n번째 최소값을 찾는 반복
 		idxMin = i;  // n번째 최소값을 첫번째 원소값으로 가정
